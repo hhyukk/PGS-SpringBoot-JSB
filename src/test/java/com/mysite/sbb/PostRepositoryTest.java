@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -109,18 +108,48 @@ class PostRepositoryTest {
     @Test
     @DisplayName("답변 생성 by oneToMany")
     @Transactional
-    void t9(){
+    void t9() {
         Question question = questionRepository.findById(2).get();
 
-        int beforeCount=question.getAnswers().size();
+        int beforeCount = question.getAnswers().size();
 
         Answer newAnswer = question.addAnswer("네 자동으로 생성됩니다.");
 
         //트랜잭션이 종료된 이후에 DB에 반영되기 때문에 현재는 일단 0으로 설정
         assertThat(newAnswer.getId()).isEqualTo(0);
 
-        int afterCount=question.getAnswers().size();
+        int afterCount = question.getAnswers().size();
 
         assertThat(afterCount).isEqualTo(beforeCount + 1);
+    }
+
+    @Test
+    @DisplayName("답변 조회")
+    void t10() {
+        Answer answer = answerRepository.findById(1).get();
+
+        assertThat(answer.getId()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("답변 조회 by oneToMany")
+    void t11() {
+        Question question = questionRepository.findById(2).get();
+
+        List<Answer> answers = question.getAnswers();
+        assertThat(answers).hasSize(1);
+
+        Answer answer = answers.get(0);
+        assertThat(answer.getContent()).isEqualTo("네 자동으로 생성됩니다.");
+    }
+
+    @Test
+    @DisplayName("findAnswer by question")
+    void t12(){
+        Question question=questionRepository.findById(2).get();
+
+        Answer answer1 = question.getAnswers().get(0);
+
+        assertThat(answer1.getId()).isEqualTo(1);
     }
 }
