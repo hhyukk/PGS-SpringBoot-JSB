@@ -27,7 +27,7 @@ public class Question {
     @Column(columnDefinition = "Text")
     private String content;
 
-    @OneToMany(mappedBy = "question", fetch = EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Answer> answers=new ArrayList<>(); // ANSWER_ID_LIST 같은 칼럼은 생기지 않는다.
 
     public Answer addAnswer(String content) {
